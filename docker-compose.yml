@@ -6,7 +6,7 @@ services:
       context: ./server
       dockerfile: Dockerfile
       target: base
-    container_name: trakto-server-dev
+    container_name: server-dev
     ports:
       - "3000:3000"
     environment:
@@ -22,7 +22,7 @@ services:
     command: pnpm run start:dev
     depends_on: []
     networks:
-      - trakto-network
+      - network
     restart: unless-stopped
 
   web:
@@ -30,7 +30,7 @@ services:
       context: ./web
       dockerfile: Dockerfile
       target: base
-    container_name: trakto-web-dev
+    container_name: web-dev
     ports:
       - "5173:5173"
     environment:
@@ -44,7 +44,7 @@ services:
       - web_node_modules:/app/node_modules
     command: pnpm run dev --host 0.0.0.0
     networks:
-      - trakto-network
+      - network
     restart: unless-stopped
 
   worker:
@@ -52,7 +52,7 @@ services:
       context: ./worker
       dockerfile: Dockerfile
       target: base
-    container_name: trakto-worker-dev
+    container_name: worker-dev
     environment:
       - NODE_ENV=development
       - API_BASE_URL=http://server:3000
@@ -63,19 +63,19 @@ services:
       - ./worker/src:/app/src
       - ./worker/package.json:/app/package.json
       - worker_node_modules:/app/node_modules
-      - /tmp/trakto-worker:/app/temp
+      - /tmp/worker:/app/temp
     command: pnpm run start:dev
     depends_on:
       - server
     networks:
-      - trakto-network
+      - network
     restart: unless-stopped
 
 
   # Nginx para proxy reverso (opcional)
   nginx:
     image: nginx:alpine
-    container_name: trakto-nginx-dev
+    container_name: nginx-dev
     ports:
       - "80:80"
     volumes:
@@ -84,7 +84,7 @@ services:
       - server
       - web
     networks:
-      - trakto-network
+      - network
     restart: unless-stopped
     profiles:
       - nginx
@@ -95,5 +95,5 @@ volumes:
   worker_node_modules:
 
 networks:
-  trakto-network:
+  network:
     driver: bridge
