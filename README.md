@@ -43,7 +43,7 @@ Uma plataforma completa de processamento de vídeos construída com NestJS, Reac
 ### 1. Clone do repositório
 ```bash
 git clone <repository-url>
-cd NestJS-Video-Compress
+cd NestJS-Video-Compress-API
 ```
 
 ### 2. Configuração do ambiente
