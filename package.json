@@ -1,0 +1,28 @@
+{
+  "name": "trakto-video-platform",
+  "version": "1.0.0",
+  "description": "Plataforma de processamento de vídeos com NestJS + Firebase + GCS + Pub/Sub + React",
+  "scripts": {
+    "dev": "concurrently \"cd server && pnpm run start:dev\" \"cd web && pnpm run dev\"",
+    "dev:server": "cd server && pnpm run start:dev",
+    "dev:web": "cd web && pnpm run dev",
+    "dev:worker": "cd worker && pnpm run start:dev",
+    "build": "cd server && pnpm run build && cd ../web && pnpm run build",
+    "build:server": "cd server && pnpm run build",
+    "build:web": "cd web && pnpm run build",
+    "build:worker": "cd worker && pnpm run build",
+    "install:all": "pnpm install && cd server && pnpm install && cd ../web && pnpm install && cd ../worker && pnpm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "workspaces": [
+    "server",
+    "web", 
+    "worker"
+  ],
+  "packageManager": "pnpm@8.15.0",
+  "engines": {
+    "node": ">=16"
+  }
+}

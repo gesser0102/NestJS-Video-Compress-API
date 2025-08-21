@@ -1,0 +1,82 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build outputs
+dist/
+**/dist/
+build/
+
+# Environment files (keep examples)
+.env
+.env.local
+.env.production
+.env.cloudrun
+
+# Logs
+logs/
+**/logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Docker volumes and caches
+.docker/
+
+# Cloud files (docs are kept for reference)
+cleanup-cloudrun.sh
+deploy-cloudrun.sh
+
+# Test output
+test-results/
+coverage/
+
+# Development files that shouldn't be in production
+.env.development
+.env.test
+
+# Package manager files (keep lock files for consistency)
+.pnpm-store/
+.npm/
+.yarn/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# ESLint cache
+.eslintcache
+
+# Misc
+.claude/

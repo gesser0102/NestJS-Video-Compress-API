@@ -1,0 +1,99 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      target: base
+    container_name: trakto-server-dev
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - WEBSOCKET_CORS_ORIGIN=http://localhost:5173
+    env_file:
+      - .env
+    volumes:
+      - ./server/src:/app/src
+      - ./server/package.json:/app/package.json
+      - server_node_modules:/app/node_modules
+    command: pnpm run start:dev
+    depends_on: []
+    networks:
+      - trakto-network
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+      target: base
+    container_name: trakto-web-dev
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:3000
+      - VITE_SOCKET_URL=http://localhost:3000
+    volumes:
+      - ./web/src:/app/src
+      - ./web/public:/app/public
+      - ./web/index.html:/app/index.html
+      - ./web/package.json:/app/package.json
+      - web_node_modules:/app/node_modules
+    command: pnpm run dev --host 0.0.0.0
+    networks:
+      - trakto-network
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+      target: base
+    container_name: trakto-worker-dev
+    environment:
+      - NODE_ENV=development
+      - API_BASE_URL=http://server:3000
+    
+    env_file:
+      - .env
+    volumes:
+      - ./worker/src:/app/src
+      - ./worker/package.json:/app/package.json
+      - worker_node_modules:/app/node_modules
+      - /tmp/trakto-worker:/app/temp
+    command: pnpm run start:dev
+    depends_on:
+      - server
+    networks:
+      - trakto-network
+    restart: unless-stopped
+
+
+  # Nginx para proxy reverso (opcional)
+  nginx:
+    image: nginx:alpine
+    container_name: trakto-nginx-dev
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - server
+      - web
+    networks:
+      - trakto-network
+    restart: unless-stopped
+    profiles:
+      - nginx
+
+volumes:
+  server_node_modules:
+  web_node_modules:
+  worker_node_modules:
+
+networks:
+  trakto-network:
+    driver: bridge
